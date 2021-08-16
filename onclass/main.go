@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -10,7 +11,14 @@ func home(w http.ResponseWriter, r *http.Request) {
 }
 
 func user(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
 	fmt.Fprintf(w, "这是用户")
+	fmt.Fprintf(w, body)
+	if err != nil {
+		fmt.Fprintf(w, "read body failed: %v", err)
+		// 记住要返回，不然就还会执行后面的代码
+		return
+	}
 }
 
 func createUser(w http.ResponseWriter, r *http.Request) {
@@ -30,11 +38,11 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
-type Server interface {
-	Route(pattern string, handlerFunc http.HandlerFunc)
-	Start(address string) error
-}
-
-type sdkHttpServer struct {
-	Name string
-}
+//type Server interface {
+//	Route(pattern string, handlerFunc http.HandlerFunc)
+//	Start(address string) error
+//}
+//
+//type sdkHttpServer struct {
+//	Name string
+//}
