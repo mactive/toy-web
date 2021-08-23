@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"net/http"
+	"io/ioutil"
 )
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -11,8 +11,9 @@ func home(w http.ResponseWriter, r *http.Request) {
 }
 
 func user(w http.ResponseWriter, r *http.Request) {
-	body, err := io.ReadAll(r.Body)
 	fmt.Fprintf(w, "这是用户")
+
+	body, err := ioutil.ReadAll(r.Body)
 	fmt.Fprintf(w, body)
 	if err != nil {
 		fmt.Fprintf(w, "read body failed: %v", err)

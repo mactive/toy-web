@@ -4,13 +4,18 @@ package main
 import "net/http"
 
 func main() {
+	server := NewHttpServer("test-server")
+	server.Route("/", home)
+	server.Route("/user", user)
+	server.Route("/user/create", createUser)
+	server.Route("/order", order)
+	server.Start("8080")
 
 }
 
 type Server interface {
-	// Route
 	Route(pattern string, handlerFunc http.HandlerFunc)
-	
+
 	Start(address string) error
 }
 
@@ -19,9 +24,15 @@ type sdkHttpServer struct {
 }
 
 func (s sdkHttpServer) Route(pattern string, handlerFunc http.HandlerFunc) {
-	panic("implement me")
+	http.HandleFunc(pattern, handlerFunc)
+	//panic("implement me")
 }
 
 func (s sdkHttpServer) Start(address string) error {
-	panic("implement me")
+	return http.ListenAndServe(address, nil)
+	//panic("implement me")
+}
+
+func NewHttpServer(name string) Server {
+	return &sdkHttpServer{Name: name}
 }
